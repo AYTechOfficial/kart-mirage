@@ -3656,7 +3656,7 @@ export class Scenery implements System {
    *  Roadside signage — and the ~70% cull that goes with it.
    * ==========================================================================
    *  Round 1's biggest readable text in three separate frames was GOLD, NITRO,
-   *  ROYALE and BOOST on large rectangular hoardings. That is what a generic
+   *  MIRAGE and BOOST on large rectangular hoardings. That is what a generic
    *  rally circuit looks like; §1's course is an Amalfi coastal village, and in
    *  scenery.png the two largest objects in the frame were both adverts, so the
    *  eye's first stop was a billboard rather than the track or the kart.

@@ -171,17 +171,17 @@ uniform vec4 rolloff; // x knee (scene-linear), y exponent, z highlight desat, w
 
 const vec3 KR_LUMA = vec3(0.2126, 0.7152, 0.0722);
 
-float krHash12(vec2 p) {
+float kmHash12(vec2 p) {
   vec3 q = fract(vec3(p.x, p.y, p.x) * 0.1031);
   q += dot(q, q.yzx + 33.33);
   return fract((q.x + q.y) * q.z);
 }
 
-float krValueNoise(float x) {
+float kmValueNoise(float x) {
   float i = floor(x);
   float f = fract(x);
   f = f * f * (3.0 - 2.0 * f);
-  return mix(krHash12(vec2(i, 17.3)), krHash12(vec2(i + 1.0, 17.3)), f);
+  return mix(kmHash12(vec2(i, 17.3)), kmHash12(vec2(i + 1.0, 17.3)), f);
 }
 
 // Scene-linear highlight shoulder, applied BEFORE the display transform.
@@ -241,7 +241,7 @@ float krValueNoise(float x) {
 // sun disc and sun-on-chrome still bleach to white on the way out. The span came
 // down from 40x with the knee moving up, so the desat still lands in the same
 // place in absolute scene-linear terms (0.9 * 30 = 27, was 0.75 * 40 = 30).
-vec3 krHighlightRolloff(vec3 c) {
+vec3 kmHighlightRolloff(vec3 c) {
   float m = max(max(c.r, c.g), c.b);
   float knee = rolloff.x;
   if (m <= knee) return c;
@@ -251,7 +251,7 @@ vec3 krHighlightRolloff(vec3 c) {
   return mix(scaled, vec3(dot(scaled, KR_LUMA)), desat);
 }
 
-vec3 krRRTODTFit(vec3 v) {
+vec3 kmRRTODTFit(vec3 v) {
   vec3 a = v * (v + 0.0245786) - 0.000090537;
   vec3 b = v * (0.983729 * v + 0.4329510) + 0.238081;
   return a / b;
@@ -259,12 +259,12 @@ vec3 krRRTODTFit(vec3 v) {
 
 // Bit-for-bit the same operator three uses for ACESFilmicToneMapping, so a
 // no-post preview and the composed frame agree on exposure and hue shift.
-vec3 krToneMap(vec3 c) {
+vec3 kmToneMap(vec3 c) {
   c *= grade.x / 0.6;
   c = mat3(0.59719, 0.07600, 0.02840,
            0.35458, 0.90834, 0.13383,
            0.04823, 0.01566, 0.83777) * c;
-  c = krRRTODTFit(c);
+  c = kmRRTODTFit(c);
   c = mat3( 1.60475, -0.10208, -0.00327,
            -0.53108,  1.10813, -0.07276,
            -0.07367, -0.00605,  1.07602) * c;
@@ -429,7 +429,7 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, const in float depth,
   // Jitter breaks the tap pattern into noise instead of ghost steps. Safe to
   // run unconditionally now: the smear loop is never entered with fewer than
   // SMEAR_SAMPLES taps, and SMEAR_SAMPLES is never below six.
-  float jitter = krHash12(uv * resolution + fract(time) * 311.0) - 0.5;
+  float jitter = kmHash12(uv * resolution + fract(time) * 311.0) - 0.5;
 
   vec3 c;
   // Under ~0.4 px of travel there is nothing to integrate, so the whole frame
@@ -477,8 +477,8 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, const in float depth,
   // --- display transform ---------------------------------------------------
   // Shoulder first, while there is still headroom to shape: once ACES has run
   // the information is already gone.
-  c = krHighlightRolloff(c);
-  c = krToneMap(c);
+  c = kmHighlightRolloff(c);
+  c = kmToneMap(c);
 
   // Filmic S. smoothstep-toward keeps 0 and 1 pinned, so it adds midtone snap
   // without crushing the shadow detail the AO pass just paid for.
@@ -521,8 +521,8 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, const in float depth,
   if (streakGain > 0.001) {
     float ang = atan(fromCentre.y, fromCentre.x);
     float kick = rush.z;
-    float n = krValueNoise(ang * 26.0 + time * 1.6) * 0.62
-            + krValueNoise(ang * 63.0 - time * 2.4) * 0.38;
+    float n = kmValueNoise(ang * 26.0 + time * 1.6) * 0.62
+            + kmValueNoise(ang * 63.0 - time * 2.4) * 0.38;
     // Threshold widened from (0.60, 0.97). 'n' is the sum of two value-noise
     // octaves, so it is roughly normal about 0.5 with sd ~0.18: a 0.97 upper
     // edge means the comb only ever reached full strength on ~0.5% of angles
@@ -552,8 +552,8 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, const in float depth,
     // and near-white. Additive on top of the first set, so at rest it does not
     // exist at all and on a boost the frame gains a second, tighter comb.
     if (kick > 0.004) {
-      float n2 = krValueNoise(ang * 47.0 - time * 7.5) * 0.58
-               + krValueNoise(ang * 111.0 + time * 11.0) * 0.42;
+      float n2 = kmValueNoise(ang * 47.0 - time * 7.5) * 0.58
+               + kmValueNoise(ang * 111.0 + time * 11.0) * 0.42;
       float streak2 = smoothstep(0.66, 0.99, n2);
       float band2 = smoothstep(0.42, 0.90, rad) * (1.0 - smoothstep(1.10, 1.55, rad));
       lines += streak2 * band2 * kick * lens.z * 0.42;
@@ -606,7 +606,7 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, const in float depth,
   // dither, the teal shadow lift and the AO all live, and adding +/-2 counts of
   // white noise on top of them is what makes a shadow read as sensor noise
   // rather than as shadow.
-  float g = krHash12(uv * resolution * 1.37 + fract(time * 0.37) * 977.0) - 0.5;
+  float g = kmHash12(uv * resolution * 1.37 + fract(time * 0.37) * 977.0) - 0.5;
   c += g * lens.y * (1.15 - 0.75 * lum) * smoothstep(0.015, 0.14, lum);
 
   outputColor = vec4(max(c, 0.0), inputColor.a);
@@ -748,7 +748,7 @@ export class GradeEffect extends Effect {
         // colour stays a colour until it is genuinely an order of magnitude
         // over. The exponent is sized so display white lands at ~43x
         // scene-linear — reachable by the sun disc, sun-on-chrome, water
-        // sparkle and boost flame, and by nothing else. See krHighlightRolloff.
+        // sparkle and boost flame, and by nothing else. See kmHighlightRolloff.
         ['rolloff', new THREE.Uniform(new THREE.Vector4(0.90, 0.72, 0.16, 30.0))],
       ]),
     });

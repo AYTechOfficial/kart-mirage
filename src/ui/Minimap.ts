@@ -125,10 +125,10 @@ export class Minimap {
   private colors: string[] = [];
 
   constructor(parent: HTMLElement) {
-    this.root = el('div', 'kr-map kr-plate', parent);
+    this.root = el('div', 'km-map km-plate', parent);
     // The same WELL idiom the item box uses — one recessed graphic surface in
     // the system, not two.
-    this.well = el('div', 'kr-well', this.root);
+    this.well = el('div', 'km-well', this.root);
     this.canvas = el('canvas', undefined, this.well);
     this.g = this.canvas.getContext('2d')!;
     this.base = document.createElement('canvas');

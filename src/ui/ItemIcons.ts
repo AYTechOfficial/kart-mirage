@@ -505,7 +505,7 @@ function drawMine(g: G) {
  * broken-image placeholder, and it used the SAME gold as the "1st" position
  * accent, so one colour in the HUD meant both "you are winning" and "you have
  * nothing". Gold is now the position accent and nothing else. The HUD ghosts
- * this further (see `.kr-item.empty` in ui.css) so a full-weight, saturated,
+ * this further (see `.km-item.empty` in ui.css) so a full-weight, saturated,
  * glowing slot can only ever mean "you are holding something".
  */
 function drawEmptyBox(g: G) {

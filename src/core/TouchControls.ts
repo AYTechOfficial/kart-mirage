@@ -1498,7 +1498,7 @@ const MARKUP = `
 
 <div class="tc-coach"></div>
 
-<div class="tc-rotate"><div><b>Rotate your device</b><br/>Kart Royale plays in landscape.</div></div>
+<div class="tc-rotate"><div><b>Rotate your device</b><br/>Kart Mirage plays in landscape.</div></div>
 `;
 
 const CSS = `
@@ -1769,7 +1769,7 @@ html[data-drift-tier="3"] .tc-halo { animation: tc-flare3 .52s ease-out; }
 }
 
 /* ---- HUD reflow for thumbs ----------------------------------------------- */
-html[data-touch] .kr-speed {
+html[data-touch] .km-speed {
   right: 47vmin;
   transform: scale(.82);   /* transform-origin is already 100% 100% */
 }
@@ -1795,7 +1795,7 @@ html[data-touch] .kr-speed {
      Two things about it are not cosmetic:
 
      1. Set the TOKEN, not 'transform'. ui.css now carries
-        'html[data-touch] .kr .kr-speed { transform: scale(var(--speed-s)) }',
+        'html[data-touch] .km .km-speed { transform: scale(var(--speed-s)) }',
         which is (0,3,1); this rule was (0,2,1), so its 'scale(.74)' was dead
         on arrival and the dial silently stayed at .82. Writing --speed-s is
         also the only version that survives the mini-turbo tier pop, which
@@ -1811,7 +1811,7 @@ html[data-touch] .kr-speed {
      plate into the TOP rail (measured 100% occluded by the thumb once
      auto-drift holds DRIFT for the whole lap), so the bottom-left corner is
      free and the dial simply takes it. */
-  html[data-touch] .kr .kr-speed {
+  html[data-touch] .km .km-speed {
     --speed-s: .74;
     left: 0;
     right: auto;
@@ -1819,7 +1819,7 @@ html[data-touch] .kr-speed {
   }
   /* Left-handed mirrors the rail rule, not just the widget: the cluster is on
      the left, so the readouts go right. */
-  html[data-touch][data-touch-hand="left"] .kr .kr-speed {
+  html[data-touch][data-touch-hand="left"] .km .km-speed {
     left: auto;
     right: 0;
     transform-origin: 100% 100%;
@@ -1828,7 +1828,7 @@ html[data-touch] .kr-speed {
      is 56px — so it pins to its 84px FLOOR and eats 22% of the screen height
      for two readouts. Same clamp-floor problem as the menus.
      (No backticks anywhere in this stylesheet: it is a template literal.) */
-  html[data-touch] .kr { --rail: 68px; --rail-top: 46px; }
+  html[data-touch] .km { --rail: 68px; --rail-top: 46px; }
 
   /* The position plate is the largest single object left, and it sits at
      left-centre — across the road, at eye height. Its width is
@@ -1839,18 +1839,18 @@ html[data-touch] .kr-speed {
      "+12.48" cannot make it resize sixty times a second, and re-deriving that
      width per breakpoint would just be the same decision made twice.
      The existing translateY(-50%) has to survive: it is what centres it. */
-  html[data-touch] .kr-pos {
+  html[data-touch] .km-pos {
     transform: translateY(-50%) scale(.68);
     transform-origin: 0 50%;
   }
   /* The plate itself moves to the right edge in left-handed mode (ui.css), so
      the origin it shrinks toward has to move with it or it scales away from
      its own anchored edge and leaves a growing gap. */
-  html[data-touch][data-touch-hand="left"] .kr .kr-pos {
+  html[data-touch][data-touch-hand="left"] .km .km-pos {
     transform-origin: 100% 50%;
   }
 }
-/* DEAD RULE REMOVED (round 10). This block repositioned '.kr-board', the
+/* DEAD RULE REMOVED (round 10). This block repositioned '.km-board', the
    eight-row standings tower that used to sit right-centre. Round 8 deleted
    that element, so this selector had matched nothing since. */
 
@@ -1869,7 +1869,7 @@ html[data-touch] .kr-speed {
 
 /* ---- DEFECT D7: the pad must not shadow a menu ---------------------------
    .tc-root is z-index 20 over #ui's 10, and NOTHING used to hide it. Menus'
-   tap-anywhere-confirm listener is on .kr — a subtree the event never enters,
+   tap-anywhere-confirm listener is on .km — a subtree the event never enters,
    because .tc-root is a SIBLING on document.body — so roughly 29% of the
    bottom-right quadrant of every blocking screen silently swallowed "TAP TO
    START", and the rightmost roster card on the select screen sat under DRIFT.

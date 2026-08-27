@@ -1,7 +1,7 @@
 {
-  "name": "kart-game",
+  "name": "kart-mirage",
   "version": "1.0.0",
-  "description": "",
+  "description": "Kart Mirage — a kart racer with no art assets; every texture, mesh and sound is generated in code at load time.",
   "main": "index.js",
   "scripts": {
     "dev": "vite",

@@ -175,7 +175,7 @@ const SUN_INTENSITY = 13.5;
  * `min(i, 6)`), Scenery (foliage wrap, `clamp(i * 0.14, 0.2, 1.1)`) and Effects
  * (particle lighting, `min(1.2, i * 0.26)`). All three were already saturated on
  * their clamps at 8.0, so all three are bit-identical at 13.5. The rim term in
- * `krSunRim` scales linearly with the key and IS affected — see RIM_STRENGTH.
+ * `kmSunRim` scales linearly with the key and IS affected — see RIM_STRENGTH.
  */
 /**
  * `scene.environmentIntensity`, i.e. the multiplier on every material's
@@ -604,7 +604,7 @@ const FAR_UPDATE_INTERVAL = 3;
 // The fix is the receiver-plane bias the geometry actually calls for. The light
 // is orthographic and its basis is known on the CPU, so the gradient of stored
 // depth with respect to shadow-map UV is exact and closed-form for any surface
-// normal — see `krPcfGlsl`. With it, the bias is correct per tap at every slope,
+// normal — see `kmPcfGlsl`. With it, the bias is correct per tap at every slope,
 // acne is structurally impossible, contact shadows stay attached, AND the
 // kernel can finally be widened for the soft warm penumbra §2 asks for instead
 // of being held down to hide the acne.
@@ -624,7 +624,7 @@ const FAR_UPDATE_INTERVAL = 3;
  * over a 63 cm kernel and the edge dithers instead of stepping.
  *
  * Cost is seven extra `texture()` fetches on a comparison sampler, and only on
- * fragments OUTSIDE the near box — `krCascadeShadow` returns early for anything
+ * fragments OUTSIDE the near box — `kmCascadeShadow` returns early for anything
  * inside it, which in a chase-camera frame is most of the carriageway.
  */
 const NEAR_PCF_TAPS = 9;
@@ -943,7 +943,7 @@ function fogChunks(model: AtmosphereModel, stockPars: string): Record<string, st
     // its own vFogDepth in the vertex stage but takes this chunk verbatim).
     fog_pars_fragment: `${stockPars}
 #ifdef USE_FOG
-${hazeGlsl(model, 'krFogHaze')}
+${hazeGlsl(model, 'kmFogHaze')}
 #endif
 `,
 
@@ -951,36 +951,36 @@ ${hazeGlsl(model, 'krFogHaze')}
 #ifdef USE_FOG
 
 	// world-space camera forward: minus the third ROW of the view rotation
-	vec3 krFwd = -vec3( viewMatrix[ 0 ][ 2 ], viewMatrix[ 1 ][ 2 ], viewMatrix[ 2 ][ 2 ] );
+	vec3 kmFwd = -vec3( viewMatrix[ 0 ][ 2 ], viewMatrix[ 1 ][ 2 ], viewMatrix[ 2 ][ 2 ] );
 
-	float krD = max( vFogDepth - ${K.START}, 0.0 );
+	float kmD = max( vFogDepth - ${K.START}, 0.0 );
 
 	// Exact mean of exp( -y / H ) between the ray's clamped start and end
 	// altitudes, which is the analytic Beer integral of the height profile along
 	// the ray. Both ends are clamped before the exponential, so a camera looking
 	// down a long way cannot drive the density to infinity the way integrating
 	// the raw profile below sea level would.
-	float krSlope = clamp( krFwd.y, -0.7, 0.7 );
-	float krY0 = clamp( cameraPosition.y - ${K.Y0}, -20.0, 600.0 );
-	float krY1 = clamp( cameraPosition.y + krSlope * krD - ${K.Y0}, -20.0, 600.0 );
-	float krE0 = exp( -krY0 * ${K.HINV} );
-	float krE1 = exp( -krY1 * ${K.HINV} );
-	float krDy = krY1 - krY0;
-	float krAvg = abs( krDy ) < 0.5 ? 0.5 * ( krE0 + krE1 ) : ( krE0 - krE1 ) * ${K.H} / krDy;
+	float kmSlope = clamp( kmFwd.y, -0.7, 0.7 );
+	float kmY0 = clamp( cameraPosition.y - ${K.Y0}, -20.0, 600.0 );
+	float kmY1 = clamp( cameraPosition.y + kmSlope * kmD - ${K.Y0}, -20.0, 600.0 );
+	float kmE0 = exp( -kmY0 * ${K.HINV} );
+	float kmE1 = exp( -kmY1 * ${K.HINV} );
+	float kmDy = kmY1 - kmY0;
+	float kmAvg = abs( kmDy ) < 0.5 ? 0.5 * ( kmE0 + kmE1 ) : ( kmE0 - kmE1 ) * ${K.H} / kmDy;
 
 	#ifdef FOG_EXP2
-		float krGlobal = fogDensity;
+		float kmGlobal = fogDensity;
 	#else
-		float krGlobal = 0.0;
+		float kmGlobal = 0.0;
 	#endif
 
-	float fogFactor = min( 1.0 - exp( -( ${K.SEA} * krAvg + krGlobal ) * krD ), ${K.MAX} );
+	float fogFactor = min( 1.0 - exp( -( ${K.SEA} * kmAvg + kmGlobal ) * kmD ), ${K.MAX} );
 
 	// Aerial perspective is skylight scattered in the air between here and the
 	// eye. Inside the bore there is no sky above that air, and a third of a stop
 	// of warm haze laid over the interior was a good part of why the tunnel
 	// out-shone its own exit.
-	fogFactor *= 1.0 - krInterior * ${glslFloat(INTERIOR_FOG_CUT)};
+	fogFactor *= 1.0 - kmInterior * ${glslFloat(INTERIOR_FOG_CUT)};
 
 	// CHROMA CONVERGES FASTER THAN VALUE. This is the difference between "fog"
 	// and aerial perspective, and its absence is why the backdrop read as a
@@ -999,13 +999,13 @@ ${hazeGlsl(model, 'krFogHaze')}
 	// Beer factor. At 600 m that is 78% desaturated but only 42% lightened; at
 	// 3 km both are at the cap and the headland sits a couple of percent off the
 	// sky it stands in front of, which is what §9.5 is asking for.
-	vec3 krHazeCol = krFogHaze( krFwd.xz );
-	float krHazeL = max( dot( krHazeCol, vec3( 0.2126, 0.7152, 0.0722 ) ), 1e-4 );
-	float krOwnL = dot( gl_FragColor.rgb, vec3( 0.2126, 0.7152, 0.0722 ) );
-	vec3 krDrained = krHazeCol * ( krOwnL / krHazeL );
-	float krChroma = min( fogFactor * ${glslFloat(FOG_CHROMA_RATE)}, ${glslFloat(FOG_CHROMA_MAX)} );
+	vec3 kmHazeCol = kmFogHaze( kmFwd.xz );
+	float kmHazeL = max( dot( kmHazeCol, vec3( 0.2126, 0.7152, 0.0722 ) ), 1e-4 );
+	float kmOwnL = dot( gl_FragColor.rgb, vec3( 0.2126, 0.7152, 0.0722 ) );
+	vec3 kmDrained = kmHazeCol * ( kmOwnL / kmHazeL );
+	float kmChroma = min( fogFactor * ${glslFloat(FOG_CHROMA_RATE)}, ${glslFloat(FOG_CHROMA_MAX)} );
 
-	gl_FragColor.rgb = mix( mix( gl_FragColor.rgb, krDrained, krChroma ), krHazeCol, fogFactor );
+	gl_FragColor.rgb = mix( mix( gl_FragColor.rgb, kmDrained, kmChroma ), kmHazeCol, fogFactor );
 
 #endif
 `,
@@ -1016,7 +1016,7 @@ ${hazeGlsl(model, 'krFogHaze')}
  * Everything scene-wide that needs to be visible from BOTH the lighting chunks
  * and the fog chunk goes into `<common>`, which is the one chunk every fragment
  * shader in three includes — lit, unlit, and hand-rolled ShaderMaterials that
- * pull three's chunks piecemeal. `krInterior` therefore always exists, and reads
+ * pull three's chunks piecemeal. `kmInterior` therefore always exists, and reads
  * 0 for anything that never runs the lighting path, which is exactly right: an
  * unlit material has no indirect term to occlude.
  */
@@ -1026,13 +1026,13 @@ function commonChunk(original: string, volume: InteriorVolume | null): string {
 
   if (volume !== null && volume.segments.length > 0) {
     const lines: string[] = [
-      `\tvec3 krD = p - vec3( ${F(volume.cx)}, ${F(volume.cy)}, ${F(volume.cz)} );`,
-      `\tif ( dot( krD, krD ) > ${F(volume.radius * volume.radius)} ) return 0.0;`,
+      `\tvec3 kmD = p - vec3( ${F(volume.cx)}, ${F(volume.cy)}, ${F(volume.cz)} );`,
+      `\tif ( dot( kmD, kmD ) > ${F(volume.radius * volume.radius)} ) return 0.0;`,
       '\tfloat m = 0.0;',
       '\tvec3 ap, q; float t, s;',
     ];
     // Every segment is expressed RELATIVE to the volume centre, and the test
-    // runs on `krD` rather than on `p`. The circuit sits a few hundred metres
+    // runs on `kmD` rather than on `p`. The circuit sits a few hundred metres
     // from the origin and this is squaring distances; keeping the operands under
     // a hundred metres costs nothing and keeps the whole test comfortably inside
     // float precision even where a driver decides mediump is good enough.
@@ -1040,7 +1040,7 @@ function commonChunk(original: string, volume: InteriorVolume | null): string {
       const dx = seg.bx - seg.ax, dy = seg.by - seg.ay, dz = seg.bz - seg.az;
       const inv = 1 / Math.max(dx * dx + dy * dy + dz * dz, 1e-6);
       lines.push(
-        `\tap = krD - vec3( ${F(seg.ax - volume.cx)}, ${F(seg.ay - volume.cy)}, ` +
+        `\tap = kmD - vec3( ${F(seg.ax - volume.cx)}, ${F(seg.ay - volume.cy)}, ` +
           `${F(seg.az - volume.cz)} );`,
         `\tt = clamp( dot( ap, vec3( ${F(dx)}, ${F(dy)}, ${F(dz)} ) ) * ${F(inv)}, 0.0, 1.0 );`,
         `\tq = ap - vec3( ${F(dx)}, ${F(dy)}, ${F(dz)} ) * t;`,
@@ -1057,33 +1057,33 @@ function commonChunk(original: string, volume: InteriorVolume | null): string {
 
   return `${original}
 
-// --- Kart Royale: scene-wide lighting state ---------------------------------
+// --- Kart Mirage: scene-wide lighting state ---------------------------------
 // 1 deep inside an enclosed volume, 0 in the open. Written once per fragment by
 // the patched <lights_fragment_begin>; read by the indirect terms, by the
 // shadowless fill lights and by aerial perspective.
-float krInterior = 0.0;
+float kmInterior = 0.0;
 
-/** World-space shading normal. Written alongside krInterior; the shadow filter
+/** World-space shading normal. Written alongside kmInterior; the shadow filter
  *  needs it for its receiver-plane bias and the fills need it for nothing at
  *  all, but recovering it twice from the view matrix would be silly. */
-vec3 krWorldNormal = vec3( 0.0, 1.0, 0.0 );
+vec3 kmWorldNormal = vec3( 0.0, 1.0, 0.0 );
 
 /** The key's own shadow test, 0 = fully occluded .. 1 = fully lit. Written by
  *  the directional loop at cascade 0 and read by the fill coupling and by the
  *  warm terminator band. 1 when there is no shadow map at all, which is right:
  *  with nothing to occlude the key, nothing is in its shadow. */
-float krKeyShadow = 1.0;
+float kmKeyShadow = 1.0;
 
 /** How much of the KEY this fragment is actually receiving, shaped — shadow
  *  test times a saturating N·L. This, not the shadow test alone, is what the
  *  cool fill is coupled against: a surface turned away from the sun is in shade
  *  whatever the shadow map says. */
-float krKeyLit = 0.0;
+float kmKeyLit = 0.0;
 
 /** Peaks at the half-shadow line, zero at both ends. The penumbra band. */
-float krPenumbra = 0.0;
+float kmPenumbra = 0.0;
 
-float krInteriorAt( vec3 p ) {
+float kmInteriorAt( vec3 p ) {
 ${body}
 }
 
@@ -1106,7 +1106,7 @@ ${body}
  * road fragment past about twelve metres is grazing and the rim becomes a second
  * uncontrolled specular smeared over the whole carriageway.
  */
-vec3 krSunRim( const in vec3 lightColor, const in vec3 lightDir,
+vec3 kmSunRim( const in vec3 lightColor, const in vec3 lightDir,
 	const in vec3 N, const in vec3 V, const in float rough ) {
 	float graze = 1.0 - saturate( dot( N, V ) );
 	float lit = saturate( dot( N, lightDir ) );
@@ -1118,7 +1118,7 @@ vec3 krSunRim( const in vec3 lightColor, const in vec3 lightDir,
 `;
 }
 
-/** Set `krInterior` before anything reads it, from the world position three
+/** Set `kmInterior` before anything reads it, from the world position three
  *  itself reconstructs the same way for its light-probe grid. */
 function interiorLightsChunk(original: string): string {
   const anchor = 'vec3 geometryClearcoatNormal = vec3( 0.0 );';
@@ -1128,11 +1128,11 @@ function interiorLightsChunk(original: string): string {
   }
   return original.replace(anchor, `${anchor}
 
-	krInterior = krInteriorAt( ( ( vec4( geometryPosition, 1.0 ) - viewMatrix[ 3 ] ) * viewMatrix ).xyz );
+	kmInterior = kmInteriorAt( ( ( vec4( geometryPosition, 1.0 ) - viewMatrix[ 3 ] ) * viewMatrix ).xyz );
 	// three's own inverseTransformDirection: the view rotation is orthonormal, so
 	// right-multiplying by it is the inverse. The shadow filter's receiver-plane
 	// bias is expressed in the light's WORLD basis and needs this.
-	krWorldNormal = normalize( ( vec4( geometryNormal, 0.0 ) * viewMatrix ).xyz );
+	kmWorldNormal = normalize( ( vec4( geometryNormal, 0.0 ) * viewMatrix ).xyz );
 `);
 }
 
@@ -1151,7 +1151,7 @@ function interiorLightsChunk(original: string): string {
  *
  *  · THE PENUMBRA BAND. §2 asks for a warm-tinted penumbra, and a shadow term
  *    that only ever multiplies toward zero can produce a grey stencil and
- *    nothing else. `krPenumbra` peaks on the half-shadow line, so this lays a
+ *    nothing else. `kmPenumbra` peaks on the half-shadow line, so this lays a
  *    lick of the key's own #ffd9a8 exactly across the terminator and nowhere
  *    else.
  */
@@ -1167,15 +1167,15 @@ function indirectMapsChunk(original: string): string {
     `vec3( ${F(c.r * k)}, ${F(c.g * k)}, ${F(c.b * k)} )`;
   return `${original}
 #if defined( RE_IndirectDiffuse )
-	irradiance *= 1.0 - krInterior * ${F(INTERIOR_IRRADIANCE_CUT)};
-	iblIrradiance *= 1.0 - krInterior * ${F(INTERIOR_IRRADIANCE_CUT)};
+	irradiance *= 1.0 - kmInterior * ${F(INTERIOR_IRRADIANCE_CUT)};
+	iblIrradiance *= 1.0 - kmInterior * ${F(INTERIOR_IRRADIANCE_CUT)};
 	irradiance += mix( ${v(floor, FLOOR_IRRADIANCE)},
-		${v(cave, INTERIOR_FLOOR_IRRADIANCE)}, krInterior );
-	irradiance += ${v(warm, TERMINATOR_IRRADIANCE)} * krPenumbra;
+		${v(cave, INTERIOR_FLOOR_IRRADIANCE)}, kmInterior );
+	irradiance += ${v(warm, TERMINATOR_IRRADIANCE)} * kmPenumbra;
 #endif
 #if defined( RE_IndirectSpecular )
-	radiance *= 1.0 - krInterior * ${F(INTERIOR_RADIANCE_CUT)};
-	clearcoatRadiance *= 1.0 - krInterior * ${F(INTERIOR_RADIANCE_CUT)};
+	radiance *= 1.0 - kmInterior * ${F(INTERIOR_RADIANCE_CUT)};
+	clearcoatRadiance *= 1.0 - kmInterior * ${F(INTERIOR_RADIANCE_CUT)};
 #endif
 `;
 }
@@ -1250,9 +1250,9 @@ function envDiffuseChunk(original: string, scale: number): string {
 function shadowBorderChunk(original: string): string {
   const from = '\t\t\treturn mix( 1.0, shadow, shadowIntensity );';
   const to = [
-    '\t\t\tvec2 krEdge = abs( shadowCoord.xy - 0.5 ) * 2.0;',
-    `\t\t\tfloat krFade = 1.0 - smoothstep( ${glslFloat(SHADOW_BORDER_FADE)}, 1.0, max( krEdge.x, krEdge.y ) );`,
-    '\t\t\tshadow = mix( 1.0, shadow, krFade );',
+    '\t\t\tvec2 kmEdge = abs( shadowCoord.xy - 0.5 ) * 2.0;',
+    `\t\t\tfloat kmFade = 1.0 - smoothstep( ${glslFloat(SHADOW_BORDER_FADE)}, 1.0, max( kmEdge.x, kmEdge.y ) );`,
+    '\t\t\tshadow = mix( 1.0, shadow, kmFade );',
     from,
   ].join('\n');
   const count = original.split(from).length - 1;
@@ -1304,12 +1304,12 @@ function cascadeShadowChunk(original: string, specs: CascadeSpec[]): string {
 		const vec3 KR_LY = vec3( ${F(SHADOW_BASIS.y.x)}, ${F(SHADOW_BASIS.y.y)}, ${F(SHADOW_BASIS.y.z)} );
 		const vec3 KR_LZ = vec3( ${F(SHADOW_BASIS.z.x)}, ${F(SHADOW_BASIS.z.y)}, ${F(SHADOW_BASIS.z.z)} );
 
-${pcfGlsl('krPcfNear', near)}
-${far ? pcfGlsl('krPcfFar', far) : ''}
+${pcfGlsl('kmPcfNear', near)}
+${far ? pcfGlsl('kmPcfFar', far) : ''}
 
 	#endif
 
-		float krCascadeShadow() {
+		float kmCascadeShadow() {
 
 			#if !defined( SHADOWMAP_TYPE_PCF )
 
@@ -1328,9 +1328,9 @@ ${far ? pcfGlsl('krPcfFar', far) : ''}
 				// distance to the near box's border, 0 at the centre and 1 at the face,
 				// taken over depth as well as the two lateral axes so a fragment leaving
 				// through the back of the frustum hands over just as smoothly
-				vec3 krE = abs( ndc - 0.5 ) * 2.0;
-				float krW = 1.0 - smoothstep( ${F(CASCADE_BLEND)}, 1.0,
-					max( max( krE.x, krE.y ), krE.z ) );
+				vec3 kmE = abs( ndc - 0.5 ) * 2.0;
+				float kmW = 1.0 - smoothstep( ${F(CASCADE_BLEND)}, 1.0,
+					max( max( kmE.x, kmE.y ), kmE.z ) );
 
 				// Order inverted from the obvious one on purpose. Inside the box the
 				// near map is authoritative and COMPLETE — in light space an occluder
@@ -1339,16 +1339,16 @@ ${far ? pcfGlsl('krPcfFar', far) : ''}
 				// map's five taps are pure waste over the majority of the screen. Most
 				// fragments now cost nine shadow fetches instead of ten, and only the
 				// 20% cross-fade band pays for both.
-				if ( krW >= 1.0 ) return krPcfNear( directionalShadowMap[ 0 ], vDirectionalShadowCoord[ 0 ] );
+				if ( kmW >= 1.0 ) return kmPcfNear( directionalShadowMap[ 0 ], vDirectionalShadowCoord[ 0 ] );
 
-				float krFar = krPcfFar( directionalShadowMap[ 1 ], vDirectionalShadowCoord[ 1 ] );
-				if ( krW <= 0.0 ) return krFar;
+				float kmFar = kmPcfFar( directionalShadowMap[ 1 ], vDirectionalShadowCoord[ 1 ] );
+				if ( kmW <= 0.0 ) return kmFar;
 
-				return mix( krFar, krPcfNear( directionalShadowMap[ 0 ], vDirectionalShadowCoord[ 0 ] ), krW );
+				return mix( kmFar, kmPcfNear( directionalShadowMap[ 0 ], vDirectionalShadowCoord[ 0 ] ), kmW );
 
 			#else
 
-				return krPcfNear( directionalShadowMap[ 0 ], vDirectionalShadowCoord[ 0 ] );
+				return kmPcfNear( directionalShadowMap[ 0 ], vDirectionalShadowCoord[ 0 ] );
 
 			#endif
 
@@ -1413,9 +1413,9 @@ function pcfGlsl(name: string, s: CascadeSpec): string {
 			// N·L against the light's own axis. Floored rather than branched: below
 			// ~6° of grazing the exact gradient diverges and the fragment is being
 			// killed by its own N·L anyway.
-			float nz = max( dot( krWorldNormal, KR_LZ ), 0.11 );
+			float nz = max( dot( kmWorldNormal, KR_LZ ), 0.11 );
 			vec2 g = clamp(
-				vec2( dot( krWorldNormal, KR_LX ), dot( krWorldNormal, KR_LY ) )
+				vec2( dot( kmWorldNormal, KR_LX ), dot( kmWorldNormal, KR_LY ) )
 					* ( ${F(span / depthRange)} / nz ),
 				-${F((SLOPE_BIAS_TAN_MAX * span) / depthRange)},
 				${F((SLOPE_BIAS_TAN_MAX * span) / depthRange)} );
@@ -1467,8 +1467,8 @@ function cascadeLightsChunk(original: string): string {
   // Cascade 0 resolves every map itself and publishes the raw shadow term.
   let body = original.slice(h + head.length, t).replace(shadowLine, `		directionalLightShadow = directionalLightShadows[ i ];
 		#if ( UNROLLED_LOOP_INDEX == 0 )
-		krKeyShadow = ( directLight.visible && receiveShadow ) ? krCascadeShadow() : 1.0;
-		directLight.color *= krKeyShadow;
+		kmKeyShadow = ( directLight.visible && receiveShadow ) ? kmCascadeShadow() : 1.0;
+		directLight.color *= kmKeyShadow;
 		#else
 ${shadowLine.split('\n')[1]}
 		#endif`);
@@ -1484,7 +1484,7 @@ ${shadowLine.split('\n')[1]}
   //    the volume is the only thing that can.
   //
   //  · Light 0 is always the key, and after it has been shaded and shadowed it
-  //    is also the only correct source for a rim — and for `krKeyLit`, which is
+  //    is also the only correct source for a rim — and for `kmKeyLit`, which is
   //    the whole warm/cool axis of the frame (see FILL_KEY_COUPLING). It has to
   //    be written from inside iteration 0, because the loop is unrolled and the
   //    three fills at the tail read it in the same statement block.
@@ -1498,26 +1498,26 @@ ${shadowLine.split('\n')[1]}
   //    to itself would put the road out entirely.
   if (body.includes(reLine)) {
     body = body.replace(reLine, `		#if ( UNROLLED_LOOP_INDEX == 0 )
-		krKeyLit = krKeyShadow * saturate( dot( geometryNormal, directLight.direction )
+		kmKeyLit = kmKeyShadow * saturate( dot( geometryNormal, directLight.direction )
 			* ${glslFloat(KEY_LIT_SHAPE)} );
-		krPenumbra = 4.0 * krKeyShadow * ( 1.0 - krKeyShadow )
+		kmPenumbra = 4.0 * kmKeyShadow * ( 1.0 - kmKeyShadow )
 			* saturate( dot( geometryNormal, directLight.direction ) * ${glslFloat(KEY_LIT_SHAPE)} );
 		#endif
 
 		#if ( UNROLLED_LOOP_INDEX >= NUM_DIR_LIGHT_SHADOWS )
-		directLight.color *= 1.0 - krInterior * ${glslFloat(INTERIOR_FILL_CUT)};
+		directLight.color *= 1.0 - kmInterior * ${glslFloat(INTERIOR_FILL_CUT)};
 		#endif
 
 		#if ( UNROLLED_LOOP_INDEX == NUM_DIR_LIGHTS - 3 )
-		directLight.color *= 1.0 - krKeyLit * ${glslFloat(1 - FILL_KEY_COUPLING)};
+		directLight.color *= 1.0 - kmKeyLit * ${glslFloat(1 - FILL_KEY_COUPLING)};
 		#elif ( UNROLLED_LOOP_INDEX >= NUM_DIR_LIGHTS - 2 )
-		directLight.color *= 1.0 - krKeyLit * ${glslFloat(1 - BOUNCE_KEY_COUPLING)};
+		directLight.color *= 1.0 - kmKeyLit * ${glslFloat(1 - BOUNCE_KEY_COUPLING)};
 		#endif
 
 ${reLine}
 
 		#if ( UNROLLED_LOOP_INDEX == 0 ) && defined( STANDARD ) && defined( RE_Direct )
-		reflectedLight.directSpecular += krSunRim( directLight.color, directLight.direction,
+		reflectedLight.directSpecular += kmSunRim( directLight.color, directLight.direction,
 			geometryNormal, geometryViewDir, material.roughness );
 		#endif`);
   } else {
@@ -1529,7 +1529,7 @@ ${reLine}
   // replaces, which ran the full shading equation twice for one sun.
   const guarded = `		#if ( NUM_DIR_LIGHT_SHADOWS > 1 ) && ( UNROLLED_LOOP_INDEX == 1 )
 
-		// shadow-only cascade: no energy, no BRDF; krCascadeShadow() reads its map
+		// shadow-only cascade: no energy, no BRDF; kmCascadeShadow() reads its map
 
 		#else
 ${body}
@@ -1577,7 +1577,7 @@ export class Sky implements System {
   /**
    * Far cascade. A shadow-only slave: same direction, INTENSITY ZERO, present
    * purely so three renders and binds its map as `directionalShadowMap[1]` for
-   * `krCascadeShadow` to read. Null below Quality.High.
+   * `kmCascadeShadow` to read. Null below Quality.High.
    */
   sunFar: THREE.DirectionalLight | null = null;
   /** Unit vector toward the sun; mirrors `ctx.sunDirection`. */
@@ -2066,7 +2066,7 @@ export class Sky implements System {
   }
 
   /**
-   * `krCascadeShadow` reads `directionalShadowMap[0]` as the near cascade and
+   * `kmCascadeShadow` reads `directionalShadowMap[0]` as the near cascade and
    * `[1]` as the far one. Three fills those arrays in scene-traversal order, and
    * Sky adds the near light first and is the only thing in the game that creates
    * a DirectionalLight — but that is an invariant, not a guarantee, so say so
@@ -2084,7 +2084,7 @@ export class Sky implements System {
       const ok = lights[0] === this.sun && lights[1] === this.sunFar
         && !lights.slice(2).some((l) => l.castShadow);
       if (!ok) {
-        console.warn('[sky] directional light order changed. krCascadeShadow reads ' +
+        console.warn('[sky] directional light order changed. kmCascadeShadow reads ' +
           'directionalShadowMap[0] as the near cascade and [1] as the far one, and three ' +
           'fills that array in scene-traversal order with shadow casters first. Shadows ' +
           'will be wrong until the new light is added after Sky\'s two.');

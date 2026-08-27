@@ -190,7 +190,7 @@ const GAIN_BLEND_POW = 0.95;
  *
  * THIS IS THE HORIZON SEAM, and it was a construction error rather than a
  * tuning one. Aerial perspective drives every distant surface toward
- * `krFogHaze`, which is the low-sky radiance WITH the highlight rolloff applied.
+ * `kmFogHaze`, which is the low-sky radiance WITH the highlight rolloff applied.
  * The dome was drawn from the raw radiance and only pulled 34% of the way toward
  * that same haze. Straight down-sun the raw value is (6.94, 3.10, 1.79) and the
  * haze is (1.15, 0.51, 0.30), so the last pixel of sky above the waterline came
@@ -1133,7 +1133,7 @@ uniform float uCloudAmount;
 
 varying vec3 vDir;
 
-${hazeGlsl(model, 'krHaze')}
+${hazeGlsl(model, 'kmHaze')}
 
 /**
  * The haze in THIS fragment's azimuth. Written once at the top of main() and
@@ -1302,7 +1302,7 @@ float hash12(vec2 p) {
 void main() {
   vec3 dir = normalize(vDir);
   float gamma = dot(dir, uSunDir);
-  gHaze = krHaze(dir.xz);
+  gHaze = kmHaze(dir.xz);
 
   vec3 col = atmosphere(dir, gamma);
 

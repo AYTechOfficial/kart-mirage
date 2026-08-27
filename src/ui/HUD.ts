@@ -271,11 +271,11 @@ export class HUD implements System {
 
   init(ctx: Ctx) {
     const host = document.getElementById('ui') || document.body;
-    this.root = el('div', 'kr', host);
+    this.root = el('div', 'km', host);
 
-    this.vig = el('div', 'kr-vig', this.root);
-    this.boostEl = el('div', 'kr-boost', this.root);
-    this.driftEl = el('div', 'kr-drift', this.root);
+    this.vig = el('div', 'km-vig', this.root);
+    this.boostEl = el('div', 'km-boost', this.root);
+    this.driftEl = el('div', 'km-drift', this.root);
 
     // THE RAILS. Two screen-edge bands, outside the forward sightline and
     // outside every plate, that rise with the charge and drain with the boost.
@@ -283,16 +283,16 @@ export class HUD implements System {
     // under a tier-coloured ramp with a bright cap at its leading edge — moved
     // by a single translateY off `--fill`, so a frame costs one composited
     // transform and no layout, no paint and no allocation.
-    this.charge = el('div', 'kr-charge', this.root);
-    el('i', undefined, el('div', 'kr-charge-e l', this.charge));
-    el('i', undefined, el('div', 'kr-charge-e r', this.charge));
+    this.charge = el('div', 'km-charge', this.root);
+    el('i', undefined, el('div', 'km-charge-e l', this.charge));
+    el('i', undefined, el('div', 'km-charge-e r', this.charge));
 
     // The tier-up wash. Edge-weighted and transparent through the middle
     // third, so the one frame the player most needs to see the corner is the
     // one frame nothing is painted over it.
-    this.tierPop = el('div', 'kr-tierpop', this.root);
+    this.tierPop = el('div', 'km-tierpop', this.root);
 
-    this.hud = el('div', 'kr-hud', this.root);
+    this.hud = el('div', 'km-hud', this.root);
     this.buildLap();
     this.buildTimer();
     this.buildPosition();
@@ -301,8 +301,8 @@ export class HUD implements System {
 
     // Bottom-centre carries the transient toast slot and nothing else — that
     // band is where the player's own kart lives in every frame.
-    const bottom = el('div', 'kr-bottom', this.hud);
-    this.toasts = el('div', 'kr-toasts', bottom);
+    const bottom = el('div', 'km-bottom', this.hud);
+    this.toasts = el('div', 'km-toasts', bottom);
 
     // §7: "Minimap: bottom-centre or top-centre". TOP-centre. Bottom-centre
     // put a 240 px panel directly under the kart and on the road's vanishing
@@ -310,7 +310,7 @@ export class HUD implements System {
     this.minimap = new Minimap(this.hud);
 
     this.buildCountdown();
-    this.flash = el('div', 'kr-flash', this.root);
+    this.flash = el('div', 'km-flash', this.root);
 
     this.menus = new Menus(this.root);
     this.menus.init(ctx);
@@ -340,8 +340,8 @@ export class HUD implements System {
     parent: HTMLElement, cls: string, _topCls: string,
     build?: (layer: HTMLElement) => HTMLElement[],
   ): { wrap: HTMLDivElement; parts: Pair[] } {
-    const wrap = el('div', 'kr-lock ' + cls, parent);
-    const layer = el('div', 'kr-lock-l', wrap);
+    const wrap = el('div', 'km-lock ' + cls, parent);
+    const layer = el('div', 'km-lock-l', wrap);
     const nodes = build ? build(layer) : [layer];
     const parts: Pair[] = [];
     for (let i = 0; i < nodes.length; i++) parts.push([nodes[i], nodes[i]]);
@@ -354,25 +354,25 @@ export class HUD implements System {
     // blown-out sky than any amount of darkening, and it is the same object
     // as the item box and the speedometer instead of a seventh idea.
     // One top-left column: the lap plate and, under it, the lap-split flash.
-    // The split used to be positioned off .kr-hud, so `top: 100%` resolved
+    // The split used to be positioned off .km-hud, so `top: 100%` resolved
     // against the whole HUD frame rather than against the lap plate.
-    const tl = el('div', 'kr-tl', this.hud);
-    this.lapWrap = el('div', 'kr-lap', tl);
-    this.lapIn = el('div', 'kr-lap-in', this.lapWrap);
-    el('div', 'kr-label', this.lapIn, 'Lap');
-    const lap = this.cased(this.lapIn, 'kr-lap-nums', '', (l) => {
-      const cur = el('span', 'kr-lap-cur', l, '1');
-      el('span', 'kr-lap-sep', l, '/');
-      const tot = el('span', 'kr-lap-tot', l, '3');
+    const tl = el('div', 'km-tl', this.hud);
+    this.lapWrap = el('div', 'km-lap', tl);
+    this.lapIn = el('div', 'km-lap-in', this.lapWrap);
+    el('div', 'km-label', this.lapIn, 'Lap');
+    const lap = this.cased(this.lapIn, 'km-lap-nums', '', (l) => {
+      const cur = el('span', 'km-lap-cur', l, '1');
+      el('span', 'km-lap-sep', l, '/');
+      const tot = el('span', 'km-lap-tot', l, '3');
       return [cur, tot];
     });
     this.lapCur = lap.parts[0];
     this.lapTot = lap.parts[1];
 
-    this.split = el('div', 'kr-split', tl);
-    const pill = el('div', 'kr-pill', this.split);
-    this.splitKey = el('span', 'kr-line-k', pill, 'Lap 1');
-    this.splitVal = el('span', 'kr-line-v', pill, '0:00.000');
+    this.split = el('div', 'km-split', tl);
+    const pill = el('div', 'km-pill', this.split);
+    this.splitKey = el('span', 'km-line-k', pill, 'Lap 1');
+    this.splitVal = el('span', 'km-line-v', pill, '0:00.000');
   }
 
   /**
@@ -389,19 +389,19 @@ export class HUD implements System {
    * the other side of the frame.
    */
   private buildTimer() {
-    this.topRight = el('div', 'kr-tr', this.hud);
-    this.timerWrap = el('div', 'kr-timer', this.topRight);
-    el('div', 'kr-label', this.timerWrap, 'Time');
+    this.topRight = el('div', 'km-tr', this.hud);
+    this.timerWrap = el('div', 'km-timer', this.topRight);
+    el('div', 'km-label', this.timerWrap, 'Time');
     // JITTER. The review measured 5 px of horizontal jump here. The digits are
     // tabular AND the clock block has a hard `width` in ui.css that packs to
     // its right edge, so no advance-width difference, subpixel rounding or
     // font fallback can move anything: the fields simply consume reserved
     // space. Splitting the string into fields is what makes that possible.
-    const t = this.cased(this.timerWrap, 'kr-timer-v', '', (l) => {
-      const m = el('span', 'kr-t-m', l, '0');
-      el('span', 'kr-t-sep', l, ':');
-      const sec = el('span', 'kr-t-s', l, '00');
-      const f = el('span', 'kr-t-f', l, '.00');
+    const t = this.cased(this.timerWrap, 'km-timer-v', '', (l) => {
+      const m = el('span', 'km-t-m', l, '0');
+      el('span', 'km-t-sep', l, ':');
+      const sec = el('span', 'km-t-s', l, '00');
+      const f = el('span', 'km-t-f', l, '.00');
       return [m, sec, f];
     });
     this.tM = t.parts[0];
@@ -409,84 +409,84 @@ export class HUD implements System {
     this.tF = t.parts[2];
 
     // Under the plate, as a pill — the mirror of the lap-split pill.
-    this.bestWrap = el('div', 'kr-pill kr-bestpill', this.topRight);
-    el('span', 'kr-line-k', this.bestWrap, 'Best');
-    this.bestVal = el('span', 'kr-line-v', this.bestWrap, '0:00.000');
+    this.bestWrap = el('div', 'km-pill km-bestpill', this.topRight);
+    el('span', 'km-line-k', this.bestWrap, 'Best');
+    this.bestVal = el('span', 'km-line-v', this.bestWrap, '0:00.000');
   }
 
   private buildPosition() {
-    this.posWrap = el('div', 'kr-pos', this.hud);
-    const pos = this.cased(this.posWrap, 'kr-pos-in', '', (l) => {
-      const n = el('span', 'kr-pos-n', l, '1');
-      const suf = el('span', 'kr-pos-s', l, 'st');
+    this.posWrap = el('div', 'km-pos', this.hud);
+    const pos = this.cased(this.posWrap, 'km-pos-in', '', (l) => {
+      const n = el('span', 'km-pos-n', l, '1');
+      const suf = el('span', 'km-pos-s', l, 'st');
       return [n, suf];
     });
     this.posIn = pos.wrap;
     this.posNum = pos.parts[0];
     this.posSuf = pos.parts[1];
-    // Hung off the lockup, not off .kr-pos: on .kr-pos it would anchor to the
+    // Hung off the lockup, not off .km-pos: on .km-pos it would anchor to the
     // plate's width (set by the interval row) rather than the numeral's.
-    this.posArrow = el('span', 'kr-pos-arrow', this.posIn, '▲');
+    this.posArrow = el('span', 'km-pos-arrow', this.posIn, '▲');
 
     // THE RIVAL ROW — the whole replacement for the eight-driver tower. One
     // livery chip, one name, one ALWAYS-SIGNED delta. Round 1 shipped three
     // vocabularies in this one slot ("LEAD 12.48", "GAP +0.13", a labelled
     // empty cell reading "GRID"), so the player had to re-read it rather than
     // glance at it.
-    this.relRow = el('div', 'kr-rel none', this.posWrap);
-    this.relChip = el('span', 'kr-rel-c', this.relRow);
-    this.relName = el('span', 'kr-rel-n', this.relRow, 'Grid');
-    this.relVal = el('span', 'kr-rel-v', this.relRow, '—');
+    this.relRow = el('div', 'km-rel none', this.posWrap);
+    this.relChip = el('span', 'km-rel-c', this.relRow);
+    this.relName = el('span', 'km-rel-n', this.relRow, 'Grid');
+    this.relVal = el('span', 'km-rel-v', this.relRow, '—');
   }
 
   private buildItem() {
-    this.itemWrap = el('div', 'kr-item', this.hud);
-    const frame = el('div', 'kr-item-frame', this.itemWrap);
+    this.itemWrap = el('div', 'km-item', this.hud);
+    const frame = el('div', 'km-item-frame', this.itemWrap);
     // The pulse rim is a child rather than a pseudo-element: ::before is the
     // plate body in the round-8 two-layer plate recipe.
-    el('div', 'kr-item-pulse', frame);
-    this.itemIcon = el('div', 'kr-item-icon', this.itemWrap);
+    el('div', 'km-item-pulse', frame);
+    this.itemIcon = el('div', 'km-item-icon', this.itemWrap);
     this.itemCanvas = el('canvas', undefined, this.itemIcon);
     this.itemG = this.itemCanvas.getContext('2d')!;
-    this.itemCount = el('div', 'kr-item-count', this.itemWrap, '×2');
+    this.itemCount = el('div', 'km-item-count', this.itemWrap, '×2');
   }
 
   private buildSpeedo() {
-    this.speedWrap = el('div', 'kr-speed', this.hud);
-    const face = el('div', 'kr-speed-face', this.speedWrap);
+    this.speedWrap = el('div', 'km-speed', this.hud);
+    const face = el('div', 'km-speed-face', this.speedWrap);
     this.speedFace = face;
     this.speedCanvas = el('canvas', undefined, face);
     this.speedG = this.speedCanvas.getContext('2d')!;
     // Below the dial's open bottom wedge, outside the needle's reach, with a
     // real unit. "101" on its own is a number, not a speed.
-    const read = el('div', 'kr-speed-read', this.speedWrap);
-    this.speedNum = this.cased(read, 'kr-speed-n', '').parts[0];
-    el('span', 'kr-speed-u', read, 'km/h');
+    const read = el('div', 'km-speed-read', this.speedWrap);
+    this.speedNum = this.cased(read, 'km-speed-n', '').parts[0];
+    el('span', 'km-speed-u', read, 'km/h');
 
-    // THE RELEASE CALLOUT — a child of the speedometer, not of .kr-hud, on
+    // THE RELEASE CALLOUT — a child of the speedometer, not of .km-hud, on
     // purpose. It has to name the thing that just happened right next to the
     // instrument that is showing the payoff, and being a child means the touch
-    // layout's `html[data-touch] .kr-speed` reflow carries it for free rather
+    // layout's `html[data-touch] .km-speed` reflow carries it for free rather
     // than needing a second override that can drift out of sync with the first.
-    this.callout = el('div', 'kr-callout', this.speedWrap);
-    this.calloutLabel = el('span', 'kr-callout-l', this.callout, 'Mini-Turbo');
-    this.calloutChain = el('span', 'kr-callout-x', this.callout, '');
+    this.callout = el('div', 'km-callout', this.speedWrap);
+    this.calloutLabel = el('span', 'km-callout-l', this.callout, 'Mini-Turbo');
+    this.calloutChain = el('span', 'km-callout-x', this.callout, '');
   }
 
   private buildCountdown() {
-    this.countWrap = el('div', 'kr-count', this.root);
-    this.countVig = el('div', 'kr-count-vig', this.countWrap);
-    const stage = el('div', 'kr-count-stage', this.countWrap);
+    this.countWrap = el('div', 'km-count', this.root);
+    this.countVig = el('div', 'km-count-vig', this.countWrap);
+    const stage = el('div', 'km-count-stage', this.countWrap);
     // A three-lamp start gantry above the numeral. grid.png — the single
     // highest-energy moment in a kart racer — was completely inert; this is
     // the motif that says "a race is about to start" with no text at all, and
     // it fills in on every beat so the frame is never static.
-    this.countLights = el('div', 'kr-count-lights', stage);
-    for (let i = 0; i < 3; i++) el('div', 'kr-count-lamp', this.countLights);
-    this.countRing = el('div', 'kr-count-ring', stage);
+    this.countLights = el('div', 'km-count-lights', stage);
+    for (let i = 0; i < 3; i++) el('div', 'km-count-lamp', this.countLights);
+    this.countRing = el('div', 'km-count-ring', stage);
     // Three radial chevron ticks in the mini-turbo blue (§3), on the ring's
     // easing. A designed start motif in place of the round-1 tan haze.
-    this.countTicks = el('div', 'kr-count-ticks', stage);
+    this.countTicks = el('div', 'km-count-ticks', stage);
     let ticks = '<svg viewBox="0 0 200 200" aria-hidden="true">';
     for (let i = 0; i < 3; i++) {
       const a = -90 + i * 120;
@@ -497,8 +497,8 @@ export class HUD implements System {
     this.countTicks.innerHTML = ticks + '</svg>';
     // The countdown is the one gameplay element that keeps the display
     // gradient: full-screen, transient, nothing competing with it.
-    const c = el('div', 'kr-lock kr-count-n', stage);
-    const layer = el('div', 'kr-lock-l kr-gold', c);
+    const c = el('div', 'km-lock km-count-n', stage);
+    const layer = el('div', 'km-lock-l km-gold', c);
     this.countNum = c;
     this.countText = [layer, layer];
     setPair(this.countText, '3');
@@ -610,7 +610,7 @@ export class HUD implements System {
       }, { once: true });
     }
 
-    const t = el('div', 'kr-toast', this.toasts);
+    const t = el('div', 'km-toast', this.toasts);
     t.style.setProperty('--tc', tint);
     el('i', undefined, t, glyph);
     el('span', undefined, t, label);
@@ -917,7 +917,7 @@ export class HUD implements System {
       body = BOOST_COL;
       wantRail = 0.34 + 0.60 * boostFrac;
     }
-    // The rails live outside `.kr-hud`, so the blocking-screen fade does not
+    // The rails live outside `.km-hud`, so the blocking-screen fade does not
     // reach them. Pausing mid-slide must not leave two lit bands down the
     // sides of the pause menu.
     if (blocked) wantRail = 0;
@@ -1022,7 +1022,7 @@ export class HUD implements System {
     this.callout.classList.toggle('chain', this.chain >= 2);
     this.callout.classList.toggle('t3', tier >= 3);
     retrigger(this.callout, 'run');
-    // The surge rides the dial FACE, not `.kr-speed`: `.kr-speed` already owns
+    // The surge rides the dial FACE, not `.km-speed`: `.km-speed` already owns
     // the tier pop and, on touch, a standing `scale(.82)`, and two animations
     // fighting over one transform is how a widget ends up teleporting.
     retrigger(this.speedFace, 'surge');
@@ -1139,7 +1139,7 @@ export class HUD implements System {
   private setRelState(s: string) {
     if (s === this.relState) return;
     this.relState = s;
-    this.relRow.className = 'kr-rel ' + s;
+    this.relRow.className = 'km-rel ' + s;
   }
 
   // --------------------------------------------------------------- dial draw

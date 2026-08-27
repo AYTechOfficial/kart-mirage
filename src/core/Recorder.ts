@@ -122,7 +122,7 @@ export class Recorder {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `kart-royale-${stamp()}.webm`;
+    a.download = `kart-mirage-${stamp()}.webm`;
     a.click();
     // Revoking immediately cancels the download in some builds.
     setTimeout(() => URL.revokeObjectURL(url), 30_000);

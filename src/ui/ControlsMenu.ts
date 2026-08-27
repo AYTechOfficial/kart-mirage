@@ -321,7 +321,7 @@ const CSS = `
 .kc-root.on .kc-head, .kc-root.on .kc-body { pointer-events: auto; }
 /* The screen this was opened from stays mounted (so nothing can transition
    behind the player) but must not read through the panel. */
-html[data-kc-open] .kr-screens { opacity: 0; }
+html[data-kc-open] .km-screens { opacity: 0; }
 
 /* The bottom band belongs to the preview. The rule is a real affordance, not
    decoration: everything below it reaches the pad, everything above it does

@@ -1,4 +1,4 @@
-# Kart Royale — Art Direction Bible
+# Kart Mirage — Art Direction Bible
 
 **Every visual agent must obey this document.** It exists so that eleven people
 working in parallel produce one coherent-looking game instead of eleven

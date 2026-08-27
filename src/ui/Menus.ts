@@ -26,88 +26,88 @@ const STATS: { key: keyof KartStats; label: string }[] = [
 ];
 
 const LOGO_SVG = `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" class="kr-logo">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" class="km-logo">
   <defs>
-    <linearGradient id="krGold" x1="0" y1="0" x2="0" y2="1">
+    <linearGradient id="kmGold" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%"   stop-color="#fffdf2"/>
       <stop offset="32%"  stop-color="#ffe6a6"/>
       <stop offset="58%"  stop-color="#ffc23f"/>
       <stop offset="82%"  stop-color="#f28c14"/>
       <stop offset="100%" stop-color="#d1590c"/>
     </linearGradient>
-    <linearGradient id="krCream" x1="0" y1="0" x2="0" y2="1">
+    <linearGradient id="kmCream" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%"   stop-color="#ffffff"/>
       <stop offset="42%"  stop-color="#fdf1da"/>
       <stop offset="76%"  stop-color="#e8c79a"/>
       <stop offset="100%" stop-color="#bd9266"/>
     </linearGradient>
-    <linearGradient id="krSwoosh" x1="0" y1="0" x2="1" y2="0">
+    <linearGradient id="kmSwoosh" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0%"   stop-color="#ff7a3d" stop-opacity="0"/>
       <stop offset="30%"  stop-color="#ff9a3d" stop-opacity="0.95"/>
       <stop offset="70%"  stop-color="#ffd05a" stop-opacity="0.95"/>
       <stop offset="100%" stop-color="#fff0c0" stop-opacity="0"/>
     </linearGradient>
-    <radialGradient id="krBurst" cx="50%" cy="50%" r="50%">
+    <radialGradient id="kmBurst" cx="50%" cy="50%" r="50%">
       <stop offset="0%"   stop-color="#ffd58a" stop-opacity="0.55"/>
       <stop offset="55%"  stop-color="#ff9a3d" stop-opacity="0.18"/>
       <stop offset="100%" stop-color="#ff7a3d" stop-opacity="0"/>
     </radialGradient>
-    <pattern id="krCheck" width="24" height="24" patternUnits="userSpaceOnUse">
+    <pattern id="kmCheck" width="24" height="24" patternUnits="userSpaceOnUse">
       <rect width="24" height="24" fill="#f6efe0"/>
       <rect width="12" height="12" fill="#181425"/>
       <rect x="12" y="12" width="12" height="12" fill="#181425"/>
     </pattern>
     <!-- radial falloff so the sunburst dies away instead of hitting the
          viewBox edge and drawing a rectangle -->
-    <radialGradient id="krFadeG" cx="50%" cy="50%" r="50%">
+    <radialGradient id="kmFadeG" cx="50%" cy="50%" r="50%">
       <stop offset="0%" stop-color="#ffffff"/>
       <stop offset="30%" stop-color="#ffffff"/>
       <stop offset="100%" stop-color="#000000"/>
     </radialGradient>
-    <mask id="krFade" maskUnits="userSpaceOnUse" x="0" y="0" width="900" height="400">
-      <rect width="900" height="400" fill="url(#krFadeG)"/>
+    <mask id="kmFade" maskUnits="userSpaceOnUse" x="0" y="0" width="900" height="400">
+      <rect width="900" height="400" fill="url(#kmFadeG)"/>
     </mask>
-    <linearGradient id="krRibbonG" x1="0" y1="0" x2="1" y2="0">
+    <linearGradient id="kmRibbonG" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0%"   stop-color="#000000"/>
       <stop offset="14%"  stop-color="#ffffff"/>
       <stop offset="86%"  stop-color="#ffffff"/>
       <stop offset="100%" stop-color="#000000"/>
     </linearGradient>
-    <mask id="krRibbon" maskUnits="userSpaceOnUse" x="60" y="240" width="790" height="130">
-      <rect x="60" y="240" width="790" height="130" fill="url(#krRibbonG)"/>
+    <mask id="kmRibbon" maskUnits="userSpaceOnUse" x="60" y="240" width="790" height="130">
+      <rect x="60" y="240" width="790" height="130" fill="url(#kmRibbonG)"/>
     </mask>
-    <filter id="krDrop" x="-30%" y="-30%" width="160%" height="180%">
+    <filter id="kmDrop" x="-30%" y="-30%" width="160%" height="180%">
       <feDropShadow dx="0" dy="9" stdDeviation="10" flood-color="#060a16" flood-opacity="0.62"/>
     </filter>
-    <path id="krArc" d="M 196 224 Q 450 128 704 224" fill="none"/>
+    <path id="kmArc" d="M 196 224 Q 450 128 704 224" fill="none"/>
   </defs>
 
-  <g mask="url(#krFade)">
-    <g class="kr-logo-rays" opacity="0.8">
+  <g mask="url(#kmFade)">
+    <g class="km-logo-rays" opacity="0.8">
       RAYS
     </g>
   </g>
-  <ellipse cx="450" cy="200" rx="420" ry="200" fill="url(#krBurst)"/>
+  <ellipse cx="450" cy="200" rx="420" ry="200" fill="url(#kmBurst)"/>
 
-  <g filter="url(#krDrop)" transform="rotate(-2.4 450 210)">
+  <g filter="url(#kmDrop)" transform="rotate(-2.4 450 210)">
     <!-- chequered banner, faded at both ends so it reads as a ribbon -->
-    <g mask="url(#krRibbon)" opacity="0.7">
-      <path d="M 104 292 L 800 266 L 795 320 L 99 346 Z" fill="url(#krCheck)"/>
+    <g mask="url(#kmRibbon)" opacity="0.7">
+      <path d="M 104 292 L 800 266 L 795 320 L 99 346 Z" fill="url(#kmCheck)"/>
       <path d="M 104 292 L 800 266 L 795 320 L 99 346 Z" fill="none" stroke="#181425" stroke-width="4.5"/>
     </g>
 
-    <text class="kr-logo-wm" font-size="104" letter-spacing="10"
-          fill="url(#krCream)" stroke="#181425" stroke-width="17"
+    <text class="km-logo-wm" font-size="104" letter-spacing="10"
+          fill="url(#kmCream)" stroke="#181425" stroke-width="17"
           paint-order="stroke" stroke-linejoin="round">
-      <textPath href="#krArc" startOffset="50%" text-anchor="middle">KART</textPath>
+      <textPath href="#kmArc" startOffset="50%" text-anchor="middle">KART</textPath>
     </text>
 
-    <text class="kr-logo-wm" x="450" y="322" font-size="152" letter-spacing="6"
-          text-anchor="middle" fill="url(#krGold)" stroke="#181425" stroke-width="19"
+    <text class="km-logo-wm" x="450" y="322" font-size="152" letter-spacing="6"
+          text-anchor="middle" fill="url(#kmGold)" stroke="#181425" stroke-width="19"
           paint-order="stroke" stroke-linejoin="round"
-          transform="skewX(-7) translate(39 0)">ROYALE</text>
+          transform="skewX(-7) translate(39 0)">MIRAGE</text>
 
-    <path d="M 118 358 Q 450 386 786 344" fill="none" stroke="url(#krSwoosh)"
+    <path d="M 118 358 Q 450 386 786 344" fill="none" stroke="url(#kmSwoosh)"
           stroke-width="11" stroke-linecap="round"/>
   </g>
 </svg>`;
@@ -176,8 +176,8 @@ export class Menus {
   private resultTitle!: HTMLDivElement;
 
   constructor(parent: HTMLElement) {
-    this.root = el('div', 'kr-screens', parent);
-    // Sibling of `.kr-screens`, not a child: the tap-anywhere-confirm listener
+    this.root = el('div', 'km-screens', parent);
+    // Sibling of `.km-screens`, not a child: the tap-anywhere-confirm listener
     // below is on `this.root`, and a tap on a SETTING must not also start the
     // race. Its own listeners stop propagation before the touch pad sees it.
     this.controls = new ControlsMenu(parent);
@@ -190,8 +190,8 @@ export class Menus {
     // one delegated listener rather than a handler per control
     this.root.addEventListener('click', (e) => {
       const t = e.target as HTMLElement;
-      if (t.closest('.kr-btn')) this.ui('confirm');
-      else if (t.closest('.kr-card')) this.ui('move');
+      if (t.closest('.km-btn')) this.ui('confirm');
+      else if (t.closest('.km-card')) this.ui('move');
     });
 
     // Tap-anywhere confirm. A real control that was tapped handles itself via
@@ -199,7 +199,7 @@ export class Menus {
     this.root.addEventListener('pointerdown', (e) => {
       if (!this.blocking) return;
       const t = e.target as HTMLElement;
-      if (t.closest('.kr-btn, .kr-card')) return;
+      if (t.closest('.km-btn, .km-card')) return;
       this.tapConfirm = true;
     });
 
@@ -306,7 +306,7 @@ export class Menus {
     this.blocking = want === 'title' || want === 'select' || want === 'results';
 
     // Inline, not stylesheet: the HUD layer sets `pointer-events: none` with
-    // enough specificity that an appended `.kr-screen.on` rule loses, and a
+    // enough specificity that an appended `.km-screen.on` rule loses, and a
     // blocking screen that cannot receive a tap is unstartable on a phone —
     // there is no Enter key to fall back to. Inline always wins, and reverting
     // to 'none' the moment the screen clears keeps the canvas clickable.
@@ -315,7 +315,7 @@ export class Menus {
     // Clear the OUTGOING screen too. This used to only ever set the incoming
     // one, so a screen that had been shown kept `pointer-events: auto` as an
     // inline style — which outranks any stylesheet — for the rest of the
-    // session. Every `.kr-screen` stays displayed, so the title screen sat over
+    // session. Every `.km-screen` stays displayed, so the title screen sat over
     // the race as a live, invisible pointer target from the first frame on.
     for (const name of Object.keys(this.screens) as ScreenName[]) {
       const el = this.screens[name];
@@ -403,20 +403,20 @@ export class Menus {
   // ------------------------------------------------------------------ build
 
   private makeScreen(cls: string) {
-    const s = el('div', 'kr-screen ' + cls, this.root);
-    el('div', 'kr-screen-in', s);
+    const s = el('div', 'km-screen ' + cls, this.root);
+    el('div', 'km-screen-in', s);
     return s;
   }
 
   private buildTitle() {
-    const s = this.makeScreen('kr-s-title');
+    const s = this.makeScreen('km-s-title');
     const inner = s.firstElementChild as HTMLDivElement;
-    const wrap = el('div', 'kr-stage', inner);
+    const wrap = el('div', 'km-stage', inner);
     wrap.style.display = 'flex';
     wrap.style.flexDirection = 'column';
     wrap.style.alignItems = 'center';
     wrap.innerHTML = LOGO_SVG.replace('RAYS', buildRays());
-    el('div', 'kr-sub', wrap, 'Sunset Bay Circuit');
+    el('div', 'km-sub', wrap, 'Sunset Bay Circuit');
     // Built empty; `syncTouchCopy` fills it from `ctx.input.touch` every time
     // that flips. This used to run its OWN `matchMedia('(pointer: coarse)')`
     // probe once, in the constructor — which is exactly the check that fails on
@@ -425,17 +425,17 @@ export class Menus {
     // a lazy capture-phase mount on the first real finger; the menu copy was
     // never brought along, so an iPad in desktop mode got on-screen controls and
     // the words "Press Enter to Start" above them.
-    this.titlePrompt = el('div', 'kr-prompt', wrap);
-    this.titleGlyphs = el('div', 'kr-glyphs', wrap);
-    this.titleHint = el('div', 'kr-hint', wrap);
-    const cbtn = el('div', 'kr-btn kr-btn-controls', wrap, 'Controls');
+    this.titlePrompt = el('div', 'km-prompt', wrap);
+    this.titleGlyphs = el('div', 'km-glyphs', wrap);
+    this.titleHint = el('div', 'km-hint', wrap);
+    const cbtn = el('div', 'km-btn km-btn-controls', wrap, 'Controls');
     cbtn.onclick = (e) => { e.stopPropagation(); this.controls.show(); };
     this.syncTouchCopy(false);
     return s;
   }
 
   /**
-   * DEFECT D6. The only touch onboarding was one line of `kr-hint` at
+   * DEFECT D6. The only touch onboarding was one line of `km-hint` at
    * `clamp(9px, 1.4vmin, 18px)` — 1.4 vmin is 5.5 px on a 390-tall phone so it
    * clamped to 9 px — at 44% opacity: 1.5 mm of glyph, NAMING controls without
    * showing where any of them are, while the floating stick is invisible at
@@ -453,9 +453,9 @@ export class Menus {
     this.titlePrompt.textContent = touch ? 'Tap to Start' : 'Press Enter to Start';
     if (touch) {
       this.titleGlyphs.innerHTML =
-        '<div class="kr-gl"><span class="kr-gl-stick"><i></i><b></b></span>Steer</div>' +
-        '<div class="kr-gl"><span class="kr-gl-drift">DRIFT</span>Slide</div>' +
-        '<div class="kr-gl"><span class="kr-gl-item">+</span>Fire</div>';
+        '<div class="km-gl"><span class="km-gl-stick"><i></i><b></b></span>Steer</div>' +
+        '<div class="km-gl"><span class="km-gl-drift">DRIFT</span>Slide</div>' +
+        '<div class="km-gl"><span class="km-gl-item">+</span>Fire</div>';
       this.titleHint.innerHTML = '';
     } else {
       this.titleGlyphs.innerHTML = '';
@@ -466,13 +466,13 @@ export class Menus {
   }
 
   private buildSelect() {
-    const s = this.makeScreen('kr-s-select');
+    const s = this.makeScreen('km-s-select');
     const inner = s.firstElementChild as HTMLDivElement;
-    const head = el('div', 'kr-stage', inner);
-    el('div', 'kr-title kr-gold', head, 'Choose your racer');
-    this.rosterEl = el('div', 'kr-roster kr-stage', inner);
-    const go = el('div', 'kr-menu-list kr-stage', inner);
-    const btn = el('div', 'kr-btn sel', go, 'Start race');
+    const head = el('div', 'km-stage', inner);
+    el('div', 'km-title km-gold', head, 'Choose your racer');
+    this.rosterEl = el('div', 'km-roster km-stage', inner);
+    const go = el('div', 'km-menu-list km-stage', inner);
+    const btn = el('div', 'km-btn sel', go, 'Start race');
     btn.onclick = () => this.startRace(this.ctx);
     return s;
   }
@@ -482,18 +482,18 @@ export class Menus {
     this.rosterEl.textContent = '';
     this.cards.length = 0;
     karts.forEach((k, i) => {
-      const c = el('div', 'kr-card', this.rosterEl);
+      const c = el('div', 'km-card', this.rosterEl);
       const col = cssColor(k.stats.color);
       c.style.setProperty('--c', col);
-      const chip = el('div', 'kr-card-chip', c);
-      el('div', 'kr-card-init', chip, k.stats.name.charAt(0).toUpperCase());
-      if (k.isPlayer) el('div', 'kr-card-you', c, 'You');
-      el('div', 'kr-card-name', c, k.stats.name);
-      const stats = el('div', 'kr-stats', c);
+      const chip = el('div', 'km-card-chip', c);
+      el('div', 'km-card-init', chip, k.stats.name.charAt(0).toUpperCase());
+      if (k.isPlayer) el('div', 'km-card-you', c, 'You');
+      el('div', 'km-card-name', c, k.stats.name);
+      const stats = el('div', 'km-stats', c);
       for (const def of STATS) {
-        const row = el('div', 'kr-stat', stats);
+        const row = el('div', 'km-stat', stats);
         el('span', undefined, row, def.label);
-        const bar = el('div', 'kr-bar', row);
+        const bar = el('div', 'km-bar', row);
         const raw = k.stats[def.key] as number;
         const v = clamp((raw - STAT_RANGE[0]) / (STAT_RANGE[1] - STAT_RANGE[0]), 0.08, 1);
         const fill = el('i', undefined, bar);
@@ -526,28 +526,28 @@ export class Menus {
    * type, same rules as the results board: one standings object in the game.
    */
   private buildPause() {
-    const s = this.makeScreen('kr-s-pause');
+    const s = this.makeScreen('km-s-pause');
     const inner = s.firstElementChild as HTMLDivElement;
-    const box = el('div', 'kr-stage', inner);
+    const box = el('div', 'km-stage', inner);
     box.style.display = 'flex';
     box.style.flexDirection = 'column';
     box.style.alignItems = 'center';
     box.style.width = '100%';
-    el('div', 'kr-pause-badge', box, 'Race suspended');
-    el('div', 'kr-title kr-gold', box, 'Paused');
+    el('div', 'km-pause-badge', box, 'Race suspended');
+    el('div', 'km-title km-gold', box, 'Paused');
 
-    const grid = el('div', 'kr-pause-grid', box);
+    const grid = el('div', 'km-pause-grid', box);
     const left = el('div', undefined, grid);
-    el('div', 'kr-order-title', left, 'Running order');
-    this.pauseOrderEl = el('div', 'kr-standings', left);
+    el('div', 'km-order-title', left, 'Running order');
+    this.pauseOrderEl = el('div', 'km-standings', left);
     const right = el('div', undefined, grid) as HTMLDivElement;
     right.style.display = 'flex';
     right.style.flexDirection = 'column';
     right.style.justifyContent = 'center';
     right.style.height = '100%';
-    const list = el('div', 'kr-menu-list', right);
+    const list = el('div', 'km-menu-list', right);
 
-    const resume = el('div', 'kr-btn', list, 'Resume');
+    const resume = el('div', 'km-btn', list, 'Resume');
     // Clearing `localPause` alone is not enough: on a real race the director
     // owns the pause and `race.state` is `Paused`, which keeps `want` pinned to
     // this screen no matter what the UI's own flag says. Resume has to tell the
@@ -560,11 +560,11 @@ export class Menus {
     // Reachable MID-RACE, deliberately. `setScheme` releases every pointer and
     // zeroes the command and never touches `IRace`, so a player who cannot
     // steer can fix that without abandoning the race they are in.
-    const ctrl = el('div', 'kr-btn', list, 'Controls');
+    const ctrl = el('div', 'km-btn', list, 'Controls');
     ctrl.onclick = () => this.controls.show();
-    const restart = el('div', 'kr-btn', list, 'Restart race');
+    const restart = el('div', 'km-btn', list, 'Restart race');
     restart.onclick = () => { this.localPause = false; this.forced = null; this.startRace(this.ctx); };
-    const quit = el('div', 'kr-btn', list, 'Quit to title');
+    const quit = el('div', 'km-btn', list, 'Quit to title');
     quit.onclick = () => {
       this.localPause = false;
       this.forced = null;
@@ -577,20 +577,20 @@ export class Menus {
   }
 
   private buildResults() {
-    const s = this.makeScreen('kr-s-results');
+    const s = this.makeScreen('km-s-results');
     const inner = s.firstElementChild as HTMLDivElement;
-    this.resultTitle = el('div', 'kr-title kr-gold kr-stage', inner, 'Race complete');
-    const grid = el('div', 'kr-results-grid kr-stage', inner);
-    this.standingsEl = el('div', 'kr-standings', grid);
+    this.resultTitle = el('div', 'km-title km-gold km-stage', inner, 'Race complete');
+    const grid = el('div', 'km-results-grid km-stage', inner);
+    this.standingsEl = el('div', 'km-standings', grid);
     const right = el('div', undefined, grid) as HTMLDivElement;
     right.style.display = 'flex';
     right.style.flexDirection = 'column';
-    this.lapsEl = el('div', 'kr-laps', right);
+    this.lapsEl = el('div', 'km-laps', right);
 
-    const list = el('div', 'kr-menu-list kr-stage', inner);
-    const again = el('div', 'kr-btn', list, 'Race again');
+    const list = el('div', 'km-menu-list km-stage', inner);
+    const again = el('div', 'km-btn', list, 'Race again');
     again.onclick = () => this.startRace(this.ctx);
-    const title = el('div', 'kr-btn', list, 'Back to title');
+    const title = el('div', 'km-btn', list, 'Back to title');
     title.onclick = () => { this.localTitle = true; this.selecting = false; this.forced = null; this.ctx.race.reset(); };
     this.buttons.results = [again, title];
     return s;
@@ -626,18 +626,18 @@ export class Menus {
     this.pauseOrderEl.classList.add('settled');
     this.pauseOrderEl.textContent = '';
     order.forEach((k, i) => {
-      const row = el('div', 'kr-row' + (k === player ? ' you' : ''), this.pauseOrderEl);
+      const row = el('div', 'km-row' + (k === player ? ' you' : ''), this.pauseOrderEl);
       row.style.setProperty('--c', cssColor(k.stats.color));
-      const p = el('div', 'kr-row-p', row);
+      const p = el('div', 'km-row-p', row);
       p.innerHTML = `${i + 1}<sup>${ordinalSuffix(i + 1)}</sup>`;
-      el('div', 'kr-row-c', row);
+      el('div', 'km-row-c', row);
       // Full names, never truncated: the roster's longest name is authored and
       // the row is sized for it. `text-overflow: ellipsis` on content whose
       // maximum length you control is the loudest "unfinished" tell there is,
       // and the old in-race tower shipped "BRAMB…" and "MARLO…" in all ten
       // review frames.
-      el('div', 'kr-row-n', row, k.stats.name);
-      el('div', 'kr-row-t', row, `Lap ${clamp(k.lap + 1, 1, race.totalLaps)}/${race.totalLaps}`);
+      el('div', 'km-row-n', row, k.stats.name);
+      el('div', 'km-row-t', row, `Lap ${clamp(k.lap + 1, 1, race.totalLaps)}/${race.totalLaps}`);
     });
   }
 
@@ -656,16 +656,16 @@ export class Menus {
 
     this.standingsEl.textContent = '';
     order.forEach((k, i) => {
-      const row = el('div', 'kr-row' + (k === player ? ' you' : ''), this.standingsEl);
+      const row = el('div', 'km-row' + (k === player ? ' you' : ''), this.standingsEl);
       row.style.setProperty('--c', cssColor(k.stats.color));
       row.style.setProperty('--d', (0.14 + i * 0.055).toFixed(3) + 's');
-      const p = el('div', 'kr-row-p', row);
+      const p = el('div', 'km-row-p', row);
       p.innerHTML = `${i + 1}<sup>${ordinalSuffix(i + 1)}</sup>`;
-      el('div', 'kr-row-c', row);
-      el('div', 'kr-row-n', row, k.stats.name);
+      el('div', 'km-row-c', row);
+      el('div', 'km-row-n', row, k.stats.name);
       const t = this.finishTimes.get(k.id);
       const gap = player ? k.raceDistance - player.raceDistance : 0;
-      el('div', 'kr-row-t', row,
+      el('div', 'km-row-t', row,
         t !== undefined ? formatClock(t)
           : k === player ? formatClock(race.raceTime)
             : `${gap >= 0 ? '+' : '−'}${Math.abs(Math.round(gap))} m`);
@@ -677,16 +677,16 @@ export class Menus {
     let best = -1;
     for (let i = 0; i < laps.length; i++) if (best < 0 || laps[i] < laps[best]) best = i;
 
-    const callout = el('div', 'kr-best', this.lapsEl);
+    const callout = el('div', 'km-best', this.lapsEl);
     el('b', undefined, callout, 'Best lap');
     el('em', undefined, callout, best >= 0 ? formatClock(laps[best], 3) : '—:—.———');
 
     for (let i = 0; i < race.totalLaps; i++) {
-      const line = el('div', 'kr-lapline' + (i === best ? ' best' : ''), this.lapsEl);
+      const line = el('div', 'km-lapline' + (i === best ? ' best' : ''), this.lapsEl);
       el('b', undefined, line, `Lap ${i + 1}`);
       el('em', undefined, line, i < laps.length ? formatClock(laps[i], 3) : '—');
     }
-    const total = el('div', 'kr-lapline kr-lapline-total', this.lapsEl);
+    const total = el('div', 'km-lapline km-lapline-total', this.lapsEl);
     el('b', undefined, total, 'Total');
     el('em', undefined, total,
       formatClock(player ? (this.finishTimes.get(player.id) ?? race.raceTime) : race.raceTime, 3));

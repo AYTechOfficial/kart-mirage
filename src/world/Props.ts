@@ -953,7 +953,7 @@ export class TexLib {
         h0 = size / 4;
       // SHORT WORDS. This is the largest single lever on sign legibility and it
       // is not a rendering setting: a 4 m board at 40 m is ~40 screen pixels
-      // wide, so 'KART ROYALE' gets 3.6 px per character and there is no font,
+      // wide, so 'KART MIRAGE' gets 3.6 px per character and there is no font,
       // resolution or filter that recovers a letterform from that. Six glyphs
       // maximum, so each one gets 6-7 px and the WORD SHAPE survives even after
       // the letterforms have gone. Every pair is also picked for luminance
@@ -965,7 +965,7 @@ export class TexLib {
         ['#f5e2b0', '#8f3f22', 'AMALFI'],
         ['#2f5d43', '#f2ece0', 'MARINA'],
         ['#ff9d2e', '#2b2b34', 'NITRO'],
-        ['#2b2f3a', '#4fc3ff', 'ROYALE'],
+        ['#2b2f3a', '#4fc3ff', 'MIRAGE'],
         ['#c78ec2', '#2b2430', 'GOLD'],
         ['#4fc3ff', '#20303c', 'BOOST'],
       ];
@@ -3787,7 +3787,7 @@ export function patchAerial(mat: THREE.Material, u: Shared, near = 220, far = 44
  *  `src/render/Sky.ts` fog rotates every fragment onto the haze's own
  *  chromaticity at 1.85x the Beer rate, capped at 0.96:
  *
- *      krDrained = krHazeCol * ( krOwnL / krHazeL )
+ *      kmDrained = kmHazeCol * ( kmOwnL / kmHazeL )
  *
  *  i.e. it KEEPS THE FRAGMENT'S LUMINANCE AND THROWS ITS HUE AWAY. At the near
  *  band (~580 m) that is already 79% of the way there; from the range band out

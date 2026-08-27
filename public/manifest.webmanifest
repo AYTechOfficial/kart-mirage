@@ -1,6 +1,6 @@
 {
-  "name": "Kart Royale",
-  "short_name": "Kart Royale",
+  "name": "Kart Mirage",
+  "short_name": "Kart Mirage",
   "description": "A kart racer with no art assets — every texture, mesh and sound generated in code.",
   "start_url": "/",
   "scope": "/",
