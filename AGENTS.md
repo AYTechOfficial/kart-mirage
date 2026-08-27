@@ -1,10 +1,9 @@
 # Working on this repo
 
 A kart racer in Three.js with **zero art assets** — every texture, mesh, material
-and sound is generated in code at load time. Written almost entirely by Claude
-agents working in parallel. This file is the handover note: the contract to code
-against, the traps that have already cost real rounds, and how to tell whether a
-change actually helped.
+and sound is generated in code at load time. This file is the handover note: the
+contract to code against, the traps that have already cost real rounds, and how
+to tell whether a change actually helped.
 
 Read `README.md` for what the project is, and `ART_DIRECTION.md` for what it is
 supposed to look like — §9 of that file is the scoring rubric, and it is the bar.
@@ -91,7 +90,7 @@ that the composer never uses, and every real shader still stalls on first use.
 
 **Workflow scripts must use a literal `ROOT`.** `tools/*.js` run in a sandbox
 with no `process` global — reading `process.env` throws on line 1 and kills the
-whole run. Every one of them has `const ROOT = '/Users/ryan/dev/personal/kart-game'`
+whole run. Every one of them has a literal `const ROOT` pointing at the checkout
 with a comment saying why. A well-meaning "make this portable" commit broke all
 of them at once.
 

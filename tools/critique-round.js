@@ -15,7 +15,7 @@ export const meta = {
 // `process` and no filesystem, so `process.env` throws on the first line and the
 // run dies before a single agent starts. Asking for a literal is the honest
 // interface here.
-const ROOT = '/Users/ryan/dev/personal/kart-game'
+const ROOT = 'F:/New Developemnts/kart game/kart-mirage'
 // `args` can arrive as a JSON string rather than a parsed object depending on
 // how the run was launched. Reading `.round` off a string yields undefined, so
 // every round silently defaulted to 1 — captures all landed in shots/r1 and,

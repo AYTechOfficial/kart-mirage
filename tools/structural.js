@@ -13,7 +13,7 @@ export const meta = {
 // `process` and no filesystem, so `process.env` throws on the first line and the
 // run dies before a single agent starts. Asking for a literal is the honest
 // interface here.
-const ROOT = '/Users/ryan/dev/personal/kart-game'
+const ROOT = 'F:/New Developemnts/kart game/kart-mirage'
 
 const BASE = `You are fixing the Three.js kart racing game at ${ROOT}.
 

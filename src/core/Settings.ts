@@ -482,7 +482,7 @@ const PRESETS: Record<Quality, Omit<Settings, 'quality' | 'masterVolume'>> = {
     //  never firing: PIXEL_BUDGET_MPX[Low] is 1.2 Mpx, and a phone at ratio 1
     //  draws 0.33. The tier had three resolution policies, two of them binding
     //  and the honest one inert. That is the "one global constant applied
-    //  uniformly to things that are not uniform" trap in CLAUDE.md, twice.
+    //  uniformly to things that are not uniform" trap in AGENTS.md, twice.
     //
     //  So resolution on this tier is now ONE policy: the pixel budget, which
     //  is expressed in the unit the cost actually scales with. `renderScale`
@@ -567,7 +567,7 @@ const PRESETS: Record<Quality, Omit<Settings, 'quality' | 'masterVolume'>> = {
  *      budget below is far under it, so on any path this function controls the
  *      backstop can never bind — it exists for a `?scale=` sweep or a settings
  *      object that never came through here. Two live ceilings on one quantity
- *      is the CLAUDE.md trap; one live ceiling and one documented backstop is
+ *      is the AGENTS.md trap; one live ceiling and one documented backstop is
  *      not. `assertBackstopClearance()` below fails loudly if that ordering is
  *      ever broken by a future edit to either file.
  *    - A tier's `renderScale`. It is now 1 on every tier and reserved for

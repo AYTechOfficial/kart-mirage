@@ -9,7 +9,7 @@ import puppeteer from 'puppeteer';
 import { startVite } from './vite-server.mjs';
 
 // Literal ROOT: tools scripts run in a sandbox with no `process` global.
-const ROOT = '/Users/ryan/dev/personal/kart-game';
+const ROOT = 'F:/New Developemnts/kart game/kart-mirage';
 const OUT = join(ROOT, 'shots/controls');
 const PORT = Number((() => { const i = process.argv.indexOf("--port"); return i > -1 && process.argv[i + 1] ? process.argv[i + 1] : 5451; })());
 const W = 844, H = 390;

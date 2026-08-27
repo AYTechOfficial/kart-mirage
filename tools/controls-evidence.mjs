@@ -427,7 +427,7 @@ console.log('\n=== E. persistence (test 23) ===');
 // ===========================================================================
 // The drift ladder is the reason this whole round exists, and it shipped with
 // no reading of any kind — the halo and the reclaimed charge rails were argued
-// in prose. That is the failure mode CLAUDE.md names outright: "a spec section
+// in prose. That is the failure mode AGENTS.md names outright: "a spec section
 // implemented thoroughly but never measured is worth less than a smaller
 // change with a harness behind it". These are the missing gates.
 console.log('\n=== F. the drift ladder under a thumb (tests 15/16) ===');

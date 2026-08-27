@@ -101,7 +101,7 @@
  *  trial and contaminated trials are DROPPED rather than averaged in.
  *
  *  **Milliseconds from a software rasteriser are fiction** (see fps-bench's
- *  header, and CLAUDE.md). `--use-gl=angle` is passed and
+ *  header, and AGENTS.md). `--use-gl=angle` is passed and
  *  `--enable-unsafe-swiftshader` deliberately is not. If the game still ended
  *  up on a software device, the FRAME counts remain meaningful — they are
  *  counts, not durations — so those stay as gates and every millisecond figure
@@ -133,7 +133,7 @@
  *  ---------------------------------------------------------------------------
  *  WHAT HAS BEEN SHOWN ABOUT THIS INSTRUMENT, BY EXPERIMENT
  *
- *  Per CLAUDE.md — validate the instrument before trusting the reading. Each of
+ *  Per AGENTS.md — validate the instrument before trusting the reading. Each of
  *  these was run against a scratch build, not reasoned about:
  *
  *   - LATENCY IS REAL. `setTimeout(..., 100)` around the steer write in
@@ -1119,7 +1119,7 @@ try {
     `worst divergence ${f(worstX, 4)}`);
   /**
    * The input contract says `steer > 0` means the player wants to go RIGHT, and
-   * the handedness correction lives ONCE, in `Kart.ts` (CLAUDE.md, "Steering
+   * the handedness correction lives ONCE, in `Kart.ts` (AGENTS.md, "Steering
    * handedness"). A touch layer that emitted the chassis sign instead would be
    * a second negation and would invert steering for every phone player, which
    * is the single most expensive bug this repo has shipped. Both the sweep and
@@ -1365,7 +1365,7 @@ try {
    * AUTO and PAUSE bypass everything this section tests — they have their own
    * element listeners and an early return in `TouchControls.onDown` — and both
    * have side effects that outlive the fuzz. PAUSE opens a menu, which hides
-   * `.tc-cluster` and makes every measurement after it garbage (CLAUDE.md
+   * `.tc-cluster` and makes every measurement after it garbage (AGENTS.md
    * already records a pause menu permanently ending a race). AUTO changes the
    * control mode AND, through `setAuto`, sets `dirty` — which silently
    * re-measures the hit boxes that §4's padding probe is about to read.

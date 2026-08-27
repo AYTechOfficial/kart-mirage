@@ -195,7 +195,7 @@ auto-releases at tier 3 or on a steer dip, emitting `state.drift`.
 
 Reject. That design contains a release-on-steer-dip window, which is a second
 carry window competing with `DRIFT_CARRY_TIME` in `Kart.ts` — the exact trap
-CLAUDE.md warns about, discovered independently for at least the third time.
+AGENTS.md warns about, discovered independently for at least the third time.
 Lens 1 even names the trap and then proposes the thing it warns against.
 
 Lens 2's version does the same job with none of the risk: while DRIFT is
@@ -761,7 +761,7 @@ SAFE-RECT, occlusion — the pure-CSS render technique, since Chrome cannot
 emulate `env(safe-area-inset-*)` and the insets must be textually substituted),
 `tools/haptic-bench.mjs`.
 
-Two measurement rules carry over from CLAUDE.md and one is new:
+Two measurement rules carry over from AGENTS.md and one is new:
 
 - **Puppeteer must be launched with `--use-gl=angle` for any timing
   measurement**, or headless Chrome silently falls back to a software
