@@ -4,9 +4,11 @@ A Mario Kart-style racer in the browser. **No art assets.** No Blender, no Unity
 no textures, no models, no fonts, no audio files — every mesh, texture, sound and
 note is generated in code at load time.
 
+![Kart Mirage — title screen](docs/hero-title.png)
 
-*Every pixel of the game is generated at runtime. The kerb stripes, the crowd, the tyre
-tread, the sparks, the sky — there is not a single image file in this repository.*
+
+*Every pixel above is generated at runtime. The kerb stripes, the crowd, the tyre
+tread, the sparks, the sky — there is not a single art asset in this repository; even the screenshot above is a capture of the running game, not an asset.*
 
 ## Running it
 
